@@ -1,0 +1,4 @@
+# python Version 3.11.3
+
+# 패키지 설치
+sudo pip install -r requirements.txt

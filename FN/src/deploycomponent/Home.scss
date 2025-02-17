@@ -1,0 +1,661 @@
+// $controlName1:"지도표시";
+// $controlName2:"경계구역 표시";
+// $controlName3:"침수이미지 내수";
+// $controlName4:"침수이미지 외수";
+// $controlName5:"침수위험 지역";
+// $controlName6:"재난감시 CCTV";
+
+$controlName1: "지도표시";
+$controlName2: "행정구역 표시";
+$controlName3: "경계지역 표시";
+$controlName4: "침수위험 CCTV";
+$controlName5: "재난감시 CCTV";
+$controlName6: "";
+
+ul {
+  display: flex;
+  justify-content: right;
+}
+
+.wrapper {
+  margin: 0;
+
+  background-color: #262c3c;
+
+  $headerHeight: 80px;
+
+  header {
+    position: absolute;
+    z-index: 9999;
+    background-color: #262c3c;
+
+    width: 100%;
+    height: $headerHeight;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: white;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .top-header {
+      border: 1px solid;
+      .logo {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+        background-color: white;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        position: relative;
+      }
+      .logo::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: #262c3c;
+        z-index: 999;
+        border-left: 5px solid gray;
+        border-right: 5px solid white;
+        border-top: 5px solid gray;
+        border-bottom: 5px solid white;
+      }
+    }
+    nav {
+      height: 100%;
+      border: 1px solid;
+      position: relative;
+      z-index: 2;
+      border: 1px solid white;
+
+      ul {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+
+        li {
+          width: 100px;
+          height: 35px;
+          padding: 0 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 5px;
+          background-color: white;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+
+        li.etc {
+          width: 35px;
+
+          height: 100%;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 15px;
+          background-color: #393f4f;
+          a {
+            display: block;
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .material-symbols-outlined {
+              font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 24;
+              font-size: 2.5rem;
+              color: gray;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  main {
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+
+    .left {
+      width: 100%;
+      min-width: 800px;
+      height: 100%;
+
+      background-color: #393f4f;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+
+      position: relative;
+      top: 0px;
+      padding: 0;
+      $weatherWidth: 100px;
+      z-index: 999;
+
+      .map-item {
+        width: 100%;
+
+        height: calc(98vh - 70px);
+        overflow: hidden;
+
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        position: relative;
+        top: 70px;
+
+        .gaugeChart-block {
+          position: absolute;
+          left: 10px;
+          top: 100px;
+          z-index: 9999;
+        }
+
+        #map {
+          width: 100%;
+          height: 100%;
+          font-size: 0.8rem;
+          position: relative;
+        }
+
+        .cctv-popup-overlay {
+        }
+      }
+
+      .map-control-item {
+        height: 70px;
+        position: absolute;
+        left: 10px;
+        top: 80px;
+
+        z-index: 999;
+        opacity: 0.8;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        .item {
+          width: 75px;
+          height: 70px;
+
+          color: white;
+          background-color: #262c3c;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+
+          a {
+            display: block;
+            .material-symbols-outlined {
+              font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 12;
+              color: white;
+              font-size: 3rem;
+            }
+          }
+          a::after {
+            width: 100%;
+            height: 20px;
+            border: 1px solid black;
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            z-index: 9999;
+            background-color: white;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+          }
+        }
+        .item:nth-child(1) a::after {
+          content: $controlName1;
+          font-size: 0.8rem;
+        }
+        .item:nth-child(2) a::after {
+          content: $controlName2;
+          font-size: 0.7rem;
+        }
+        .item:nth-child(3) a::after {
+          content: $controlName3;
+          font-size: 0.7rem;
+        }
+        .item:nth-child(4) a::after {
+          content: $controlName4;
+          font-size: 0.7rem;
+        }
+        .item:nth-child(5) a::after {
+          content: $controlName5;
+          font-size: 0.7rem;
+        }
+        .item:nth-child(6) a::after {
+          content: $controlName6;
+          font-size: 0.7rem;
+        }
+      }
+
+      .weather-item {
+        z-index: 999;
+        height: 60%;
+        width: $weatherWidth;
+        position: absolute;
+        bottom: 25px;
+        right: 10px;
+
+        opacity: 0.8;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 10px;
+
+        .item {
+          background-color: #393f4f;
+          width: 100%;
+          height: 100%;
+          border: 1px solid;
+          padding: 5px;
+          background-color: #393f4f;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+
+
+          .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 24;
+            color: white;
+            font-size: 5rem;
+          }
+          box-shadow: 5px 5px 0px #6f7a99;
+
+          // icon
+          .icon{
+
+          }
+          // data
+          .obsrValue{
+            color : white;
+            border : 1px solid;
+            width : 100%;
+            height : 30px;
+            position:absolute;
+            left:0;
+            bottom : 0;
+            display : flex;
+            justify-content: center;
+            align-items: center;
+            gap:5px;
+
+            border : 0;
+            &>span{
+              color : white;
+              text-overflow: ellipsis;
+              overflow : hidden;
+              white-space :nowrap;
+            }
+
+          }
+        }
+
+        .item:nth-child(1){
+          display:none;
+        }
+      }
+    }
+
+    // .right{
+    //   width:30vw;
+    //   height : 100%;
+
+    //   display:flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   flex-direction: column;
+    //   gap:10px;
+
+    //   div{
+    //     width:100%;
+    //     height:100%;
+    //     background-color: #393F4F;;
+    //   }
+
+    //   .videoBlock{
+    //     position:relative;
+    //     width:100%;
+    //     padding : 5px;
+    //   }
+
+    //   div:nth-child(1){
+
+    //     .empty{
+
+    //         width:300px;
+
+    //         position:relative;
+    //         left:0;top:70px;right:0;bottom:0;
+    //         margin : auto;
+
+    //         span{
+    //           display:block;
+    //           width:100px;
+    //           height:100px;
+    //           position:absolute;
+    //           left:0;right:0;
+    //           top:-10vh;bottom:0;
+    //           margin : auto;
+
+    //           z-index:999;
+    //           font-size:8rem;
+    //           .material-symbols-outlined{
+    //             font-variation-settings:
+    //             'FILL' 0,
+    //             'wght' 200,
+    //             'GRAD' 0,
+    //             'opsz' 24;
+    //               color : white;
+    //             font-size : 5rem;
+    //           }
+
+    //         }
+    //     }
+    //   }
+
+    // }
+  }
+}
+
+/* 클러스터링 아이콘 공통 스타일 */
+.custom-cluster-icon {
+  color: white;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  opacity: 1;
+
+  text-align: center;
+  transition: transform 0.3s ease;
+  font-size: 1.2rem;
+  width: 100%;
+  height: 100%;
+  font-weight: 300;
+}
+
+.marker-cluster-icon-flooding {
+  color: white;
+
+  text-align: center;
+  transition: transform 0.3s ease;
+  font-size: 1.2rem;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-icon-small {
+  background-color: rgba(144, 43, 34, 0.7) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.marker-cluster-icon-medium {
+  background-color: rgba(144, 43, 34, 0.7) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.marker-cluster-icon-large {
+  background-color: rgba(144, 43, 34, 0.7) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* CCTV2 클러스터의 배경색 */
+.marker-cluster-icon-cctv2 {
+  background-color: rgba(65, 105, 225, 0.7); /* CCTV2 색상 */
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+  display: none;
+}
+
+/* 팝업 제목 스타일 */
+.leaflet-popup-content-wrapper {
+  color: gray; /* 붉은 색 */
+  font-size: 0.7rem;
+  font-weight: bold;
+
+  border-radius: 0;
+
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+/* 팝업 내용 스타일 */
+.leaflet-popup-content {
+  padding: 0;
+
+  height: 100%;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 25px;
+}
+
+/* 
+  모바일 반응형 
+*/
+@media (max-width: 575px) {
+  body {
+    width: 100% !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+    background-color: #393f4f;
+  }
+
+  .wrapper {
+    width: 400px !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+    height: 100vh !important;
+    // background-color: red !important;
+
+    header {
+      background-color: transparent !important;
+      width: 400px !important;
+      padding: 0 !important;
+      .top-header {
+        height: 70px !important;
+        border: 0 !important;
+        position: absolute !important;
+        left: 0px !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        margin: auto !important;
+        .logo {
+          width: 60px;
+          height: 60px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: hidden;
+          position: relative !important;
+          img {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+
+            padding: 5px !important;
+            margin: 0 !important;
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            object-position: 0px 0px;
+          }
+        }
+
+        .logo::after {
+          content: "";
+          display: block;
+          position: absolute;
+          left: 0;
+          top: 0;
+          background-color: #262c3c;
+          z-index: 999;
+          border: 0 !important;
+        }
+      }
+
+      .title {
+        font-size: 1.2rem;
+        width: 400px !important;
+        max-width: 400px !important;
+        margin: 0 auto !important;
+
+        display: flex;
+        align-items: right;
+        justify-content: right;
+      }
+
+      nav {
+        display: none !important;
+      }
+    }
+    main {
+      padding: 0 !important;
+      width: 400px !important;
+      max-width: 400px !important;
+      margin: 0 auto !important;
+      display: block !important;
+      .left {
+        width: 400px !important;
+        max-width: 400px !important;
+        min-width: 400px !important;
+
+        .map-item {
+          width: 400px !important;
+          max-width: 400px !important;
+          .gaugeChart-block {
+            display: none !important;
+          }
+
+          #map {
+            width: 400px !important;
+            max-width: 400px !important;
+            margin: 0 auto !important;
+          }
+        }
+      }
+
+      .map-control-item {
+        width: 400px !important;
+        max-width: 400px !important;
+        height: 70px;
+        position: absolute;
+        left: 0 !important;
+        top: 83% !important;
+        margin: auto !important;
+
+        z-index: 999;
+        opacity: 0.8;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .weather-item {
+        width: 400px !important;
+        max-width: 400px !important;
+        min-width: 400px !important;
+        height: 65px !important;
+        z-index: 999;
+        border: 0;
+        position: absolute;
+        top: 80px !important;
+        left: 0 !important;
+
+        opacity: 0.8;
+
+        display: flex !important;
+        justify-content: left !important;
+        align-items: start !important;
+        flex-direction: row !important;
+        gap: 10px;
+
+        .item{
+          width:60px !important;
+        }
+        .icon{
+          width : 25px !important;
+          height : 25px !important;
+          font-size : 1.5rem !important;
+          // border : 1px solid white;
+          position:absolute;
+          top : 5px;
+          left : 0; right: 0;
+          margin : auto;
+        }
+        
+        .obsrValue{
+          font-size : .6rem !important;
+          display : flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          gap : 2px !important;
+
+        }
+
+      }
+    }
+  }
+}
+
+
+

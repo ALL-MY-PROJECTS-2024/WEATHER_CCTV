@@ -1,0 +1,7 @@
+CCTV1 INSERT 리스너 cctv1.sql 에저장
+CCTV1 UPDATE 리스너 cctv1.sql 에저장
+CCTV1 DELETE 리스너 cctv1.sql 에저장
+
+CCTV2 INSERT 리스너 cctv2.sql 에저장
+CCTV2 UPDATE 리스너 cctv2.sql 에저장
+CCTV2 DELETE 리스너 cctv2.sql 에저장

@@ -1,0 +1,27 @@
+1. Docker 이미지 빌드
+docker build -t flask-opencv-app .
+
+2. Docker 이미지 확인
+docker images
+
+3. 컨테이너 실행
+docker run -d -p 5000:5000 --name flask-opencv-container flask-opencv-app
+
+# 3-1 컨테이너 내부로 들어가기
+docker exec -it <CONTAINER_NAME_OR_ID> /bin/bash
+docker exec -it flask-opencv-app /bin/bash
+
+4. 애플리케이션 접속
+http://localhost:5000
+
+5. 컨테이너 상태 확인
+docker ps       동작중인 ps 확인
+docker ps -a    종료까지 확인
+
+6. 컨테이너 로그 확인
+docker logs flask-opencv-container
+
+7. 컨테이너 정지 및 삭제
+docker stop flask-opencv-container
+docker rm flask-opencv-container
+

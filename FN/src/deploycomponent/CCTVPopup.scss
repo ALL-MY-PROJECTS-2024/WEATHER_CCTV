@@ -1,0 +1,471 @@
+.cctv-popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+
+  position: absolute;
+  z-index: 9999;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.cctv-popup {
+  padding: 10px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: white;
+  z-index: 9999;
+  width: 95%;
+  min-width: 0px;
+  max-width: 1000px;
+  height: 98%;
+  border-radius: 0;
+  .title {
+    // border : 1px solid;
+    height: 35px;
+    background-color: #262c3c;
+    position: relative;
+
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    button {
+      position: absolute;
+      right: 5px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      width: 25px;
+      height: 25px;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border: 1px solid white;
+    }
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 두 개의 열 */
+    grid-template-rows: 1fr 1fr; /* 두 개의 행 */
+    gap: 10px;
+    border-radius: 0;
+    padding: 5px;
+    height: 95%;
+    min-width: 800px;
+    min-height: 600px;
+    border: 1px solid lightgray;
+    .item {
+      .head {
+        height: 35px;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        background-color: white;
+        border: 1px solid lightgray;
+      }
+      .main {
+        width: 100%;
+        height: calc(100% - 35px);
+        background-color: black;
+        overflow: hidden;
+        position: relative;
+        img {
+          width: 100%;
+          height: 100%;
+          border: 1px solid white;
+          object-fit: contain;
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
+
+        video {
+          width: 100%;
+          height: 100%;
+          border: 1px solid white;
+          object-fit: contain;
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
+      }
+    }
+  }
+
+  div {
+    // border : 1px solid black;
+    padding: 10px;
+  }
+}
+
+.cctv-popup::-webkit-scrollbar {
+  display: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border: 1px solid;
+  width: 35px;
+  height: 35px;
+  background-color: #052563;
+  color: white;
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.info {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.iframe-container {
+}
+
+.show-data {
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+
+  position: relative;
+  left: 0;
+  top: 0;
+
+  .left {
+    height: 220px;
+    overflow: auto;
+    border: 1px solid lightgray;
+
+    .title {
+      height: 35px;
+      background-color: #052563;
+      color: white;
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      gap: 15px;
+
+      position: absolute;
+      width: 100%;
+
+      img {
+        margin-left: 10px;
+      }
+
+      button {
+        background-color: transparent;
+        right: 5px;
+        top: 0;
+        border: 0;
+      }
+    }
+
+    .weatherInfo {
+      position: relative;
+      top: 35px;
+      width: 100%;
+      height: 180px;
+
+      position: relative;
+      display: flex;
+      justify-content: left;
+
+      .item {
+        width: 100px;
+        height: 160px;
+        min-width: 100px;
+        border: 1px solid;
+        background-color: white;
+        overflow: auto;
+
+        .time {
+          height: 20px;
+          border: 1px solid;
+        }
+
+        .body {
+          height: 100%;
+          border: 1px solid;
+        }
+      }
+    }
+    .weatherInfo::-webkit-scrollbar {
+    }
+  }
+  .right {
+    width: 100%;
+    min-width: 800px;
+    min-height: 500px;
+    height: 100%;
+  }
+}
+
+// -------------------------------------------------------------
+
+@media (max-width: 575px) {
+  .cctv-popup-overlay {
+    width: 400px !important;
+    max-width: 400px !important;
+    min-width: 400px !important;
+    background: rgba(0, 0, 0, 0.5);
+
+    position: absolute;
+    z-index: 9999;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 100%;
+  }
+
+  .cctv-popup {
+    width: 380px !important;
+    max-width: 380px !important;
+    min-width: 380px !important;
+
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: white;
+    z-index: 9999;
+    width: 95%;
+    min-width: 0px;
+    max-width: 1000px;
+    height: 98%;
+    border-radius: 0;
+    .title {
+      // border : 1px solid;
+      height: 35px;
+      background-color: #262c3c;
+      position: relative;
+
+      display: flex;
+      justify-content: left;
+      align-items: center;
+
+      button {
+        position: absolute;
+        right: 5px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 25px;
+        height: 25px;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 1px solid white;
+      }
+    }
+
+    .body {
+      display: block !important;
+
+      border-radius: 0;
+      padding: 5px;
+      height: 95%;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      overflow: auto;
+
+      border: 1px solid lightgray;
+      .item {
+        .head {
+          height: 35px;
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          background-color: white;
+          border: 1px solid lightgray;
+        }
+        .main {
+          width: 100%;
+          height: 200px !important;
+          background-color: black;
+          overflow: hidden;
+          position: relative;
+          img {
+            width: 100%;
+            height: 100%;
+            border: 1px solid white;
+            object-fit: contain;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+          }
+
+          video {
+            width: 100%;
+            height: 100%;
+            border: 1px solid white;
+            object-fit: contain;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+          }
+        }
+      }
+    }
+
+    div {
+      // border : 1px solid black;
+      padding: 10px;
+    }
+  }
+
+  .cctv-popup::-webkit-scrollbar {
+    display: none;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: 1px solid;
+    width: 35px;
+    height: 35px;
+    background-color: #052563;
+    color: white;
+  }
+
+  .header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .info {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .iframe-container {
+  }
+
+  .show-data {
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+
+    position: relative;
+    left: 0;
+    top: 0;
+
+    .left {
+      height: 220px;
+      overflow: auto;
+      border: 1px solid lightgray;
+
+      .title {
+        height: 35px;
+        background-color: #052563;
+        color: white;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        gap: 15px;
+
+        position: absolute;
+        width: 100%;
+
+        img {
+          margin-left: 10px;
+        }
+
+        button {
+          background-color: transparent;
+          right: 5px;
+          top: 0;
+          border: 0;
+        }
+      }
+
+      .weatherInfo {
+        position: relative;
+        top: 35px;
+        width: 100%;
+        height: 180px;
+
+        position: relative;
+        display: flex;
+        justify-content: left;
+
+        .item {
+          width: 100px;
+          height: 160px;
+          min-width: 100px;
+          border: 1px solid;
+          background-color: white;
+          overflow: auto;
+
+          .time {
+            height: 20px;
+            border: 1px solid;
+          }
+
+          .body {
+            height: 100%;
+            border: 1px solid;
+          }
+        }
+      }
+      .weatherInfo::-webkit-scrollbar {
+      }
+    }
+    .right {
+      width: 100%;
+      min-width: 800px;
+      min-height: 500px;
+      height: 100%;
+    }
+  }
+}
