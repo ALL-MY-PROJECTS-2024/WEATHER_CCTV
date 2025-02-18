@@ -33,7 +33,8 @@ def get_destination_path():
     """
     script_dir = Path(__file__).resolve().parent
     parent_dir = script_dir.parent
-    dest_video = parent_dir / "CCTV_WEATHER_PROJECT_FN/public/video"
+    # Docker 환경에 맞게 경로 수정
+    dest_video = Path("/app/video")  # 컨테이너 내부 경로로 변경
     return dest_video
 
 def copy_folders(source: Path, destination: Path):

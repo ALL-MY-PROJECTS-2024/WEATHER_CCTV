@@ -6,6 +6,11 @@ import schedule
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import subprocess
 
+# move.py 모듈 import 추가
+import move
+# remove.py 모듈에서 cleanup_old_folders 함수를 가져옵니다.
+from remove import cleanup_old_folders
+
 # JSON 파일 경로
 file_path = './dataset/CCTV1.json'
 
@@ -95,14 +100,24 @@ def record_cctv(cctv):
 
 # 매일 08:00부터 23:00 사이에 매시 01분, 31분, 46분에 녹화
 def schedule_recording():
-    for hour in range(6, 24):  # 6시부터 23시까지
-        schedule.every().day.at(f"{hour:02}:01").do(run_recording)
-        schedule.every().day.at(f"{hour:02}:31").do(run_recording)
-        schedule.every().day.at(f"{hour:02}:46").do(run_recording)
 
-    # 새벽 3시 00분에 폴더 정리 작업 추가
-    schedule.every().day.at("03:00").do(run_move)  # move.py의 기능 실행
-    schedule.every().day.at("04:00").do(run_cleanup)
+
+    # for hour in range(0, 24):  # 0시부터 23시까지
+    #     schedule.every().day.at(f"{hour:02}:01").do(run_recording)
+    #     schedule.every().day.at(f"{hour:02}:31").do(run_recording)
+    #     schedule.every().day.at(f"{hour:02}:46").do(run_recording)
+
+    # # 새벽 3시 00분에 폴더 정리 작업 추가
+    # schedule.every().day.at("03:00").do(run_move)  # move.py의 기능 실행
+    # schedule.every().day.at("04:00").do(run_cleanup)
+
+        # 5분마다 녹화 실행
+    schedule.every(5).minutes.do(run_recording)
+    
+    # 10분마다 정리작업 실행
+    schedule.every(10).minutes.do(run_move)
+    schedule.every(10).minutes.do(run_cleanup)
+    
 
     while True:
         schedule.run_pending()
@@ -133,9 +148,6 @@ def run_recording():
 
     print("녹화 작업 완료")
 
-# remove.py 모듈에서 cleanup_old_folders 함수를 가져옵니다.
-from remove import cleanup_old_folders
-
 def run_cleanup():
     print("폴더 정리 작업 시작")
     cleanup_old_folders()
@@ -143,8 +155,11 @@ def run_cleanup():
 
 def run_move():
     print("폴더 복사 작업 시작")
-    move.main()
-    print("폴더 복사 작업 완료")
+    try:
+        move.main()
+        print("폴더 복사 작업 완료")
+    except Exception as e:
+        print(f"폴더 복사 작업 중 오류 발생: {str(e)}")
     
 def run_ondayback():
     """ondayback.py 실행하는 함수"""

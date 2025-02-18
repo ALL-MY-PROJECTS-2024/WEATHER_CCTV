@@ -26,16 +26,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire application code into the container
 COPY . .
 
-# Copy video_origin to video directory
-#RUN echo "=== Checking video_origin directory ===" && \
-#    ls -lh video_origin && \
-#   mkdir -p video && \
-#    echo "=== Copying video_origin to video ===" && \
-#   cp -r video_origin/* video/ && \
-#    echo "=== Checking video directory contents ===" && \
-#    ls -lh video && \
-#    echo "=== Copy completed ==="
+# Rename video_origin to video
+RUN mv video_origin video
 
+# Convert start.sh to Unix format and make it executable
+RUN dos2unix start.sh && chmod +x start.sh
 
-# Set the default command to run the application
-CMD ["bash", "-c", "python3 gen_video.py & python3 server.py & wait"]
+# Set the default command to run the start script
+CMD ["./start.sh"]
