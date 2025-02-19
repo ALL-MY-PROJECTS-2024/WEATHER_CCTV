@@ -144,17 +144,17 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
 
 
   const closeHandler = async () => {
-    // Stop the stream using the stream ID
     try {
-      if (streamId) {
-        await axios.post(`${server}/stop-stream`, { streamId });
-        console.log("Stream stopped successfully");
-      }
-      onClose(); // Close the popup
+        if (streamId) {
+            await axios.post(`${server}/stop-stream`, { streamId });
+            console.log("Stream stopped successfully");
+        }
     } catch (error) {
-      console.error("Failed to stop stream:", error);
+        console.error("Failed to stop stream:", error);
+    } finally {
+        onClose(); // 항상 팝업을 닫습니다
     }
-  };
+};
 
   return (
     <div className="cctv-popup-overlay">

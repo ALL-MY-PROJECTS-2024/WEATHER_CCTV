@@ -417,8 +417,16 @@ $composeDownButton.Add_Click({
             $_.MainWindowTitle -like "*$composeFile*"
         }
         
-        if ($powershellProcesses) {
-            foreach ($process in $powershellProcesses) {
+        # cmd 창 찾아서 종료 (docker-compose up 관련)
+        $cmdProcesses = Get-Process cmd | Where-Object {
+            $_.MainWindowTitle -like "*docker-compose*" -or 
+            $_.MainWindowTitle -like "*$composeFile*"
+        }
+        
+        # 모든 관련 프로세스 종료
+        $processesToKill = @() + $powershellProcesses + $cmdProcesses
+        if ($processesToKill) {
+            foreach ($process in $processesToKill) {
                 Stop-Process -Id $process.Id -Force
             }
         }
@@ -441,6 +449,7 @@ $composeDownButton.Add_Click({
         $loadingPanel.Visible = $false
         RefreshContainers
         RefreshImages
+        RefreshNetworks
     }
 })
 
