@@ -67,8 +67,9 @@ $containerListView.Columns.Add("Image", 150)
 $containerListView.Columns.Add("Status", 100)
 $containerListView.Columns.Add("Ports", 80)
 
-$imageListView.Columns.Add("Image Name", 380)
-$imageListView.Columns.Add("Tag", 200)
+$imageListView.Columns.Add("Image Name", 300)  # 380에서 300으로 조정
+$imageListView.Columns.Add("Tag", 150)         # 200에서 150으로 조정
+$imageListView.Columns.Add("Size", 130)        # 새로운 Size 열 추가
 
 # Function to refresh container list
 function RefreshContainers {
@@ -90,16 +91,16 @@ function RefreshContainers {
 # Function to refresh image list
 function RefreshImages {
     $imageListView.Items.Clear()
-    $images = docker images --format "{{.Repository}}`t{{.Tag}}" | Where-Object { $_ -like "*weather_cctv*" }
+    $images = docker images --format "{{.Repository}}`t{{.Tag}}`t{{.Size}}" | Where-Object { $_ -like "*weather_cctv*" }
     
     foreach ($image in $images) {
         $imageInfo = $image -split "`t"
         $listItem = New-Object System.Windows.Forms.ListViewItem($imageInfo[0])
         $listItem.SubItems.Add($imageInfo[1])
+        $listItem.SubItems.Add($imageInfo[2])
         $imageListView.Items.Add($listItem)
     }
 }
-
 # Initial load
 RefreshContainers
 RefreshImages
@@ -383,66 +384,12 @@ $composeUpButton.Add_Click({
     $composePath = Split-Path -Parent $composeFileTextBox.Text
     $composeFile = Split-Path -Leaf $composeFileTextBox.Text
     
-    if ($showConsoleCheckbox.Checked) {
-        # Run in visible console window
-        Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$composePath'; docker-compose -f '$composeFile' up"
-    } else {
-        $loadingPanel.Visible = $true
-        $form.Refresh()
-        
-        try {
-            Set-Location $composePath
-            # 자세한 로그 수집
-            $output = "Starting Docker Compose Up...`n`n"
-            $output += "Using compose file: $composeFile`n"
-            $output += "Working directory: $composePath`n`n"
-            
-            # 실행 중인 컨테이너 상태 확인
-            $output += "Current containers status:`n"
-            $output += docker-compose -f $composeFile ps 2>&1 | Out-String
-            $output += "`nStarting containers...`n"
-            
-            # 컨테이너 실행
-            $output += docker-compose -f $composeFile up -d 2>&1 | Out-String
-            
-            # 실행 후 상태 확인
-            $output += "`nNew containers status:`n"
-            $output += docker-compose -f $composeFile ps 2>&1 | Out-String
-        }
-        catch {
-            $output += "`nError occurred: $_"
-        }
-        finally {
-            $loadingPanel.Visible = $false
-        }
-        
-        # 결과 표시 (스크롤 가능한 텍스트박스로)
-        $resultForm = New-Object System.Windows.Forms.Form
-        $resultForm.Text = "Docker Compose Up Result"
-        $resultForm.Size = New-Object System.Drawing.Size(800,600)
-        $resultForm.StartPosition = 'CenterScreen'
-
-        $resultTextBox = New-Object System.Windows.Forms.TextBox
-        $resultTextBox.Multiline = $true
-        $resultTextBox.ScrollBars = 'Both'
-        $resultTextBox.WordWrap = $false
-        $resultTextBox.Font = New-Object System.Drawing.Font("Consolas", 10)
-        $resultTextBox.Size = New-Object System.Drawing.Size(780,520)
-        $resultTextBox.Location = New-Object System.Drawing.Point(10,10)
-        $resultTextBox.Text = $output
-
-        $closeButton = New-Object System.Windows.Forms.Button
-        $closeButton.Text = "Close"
-        $closeButton.Size = New-Object System.Drawing.Size(100,30)
-        $closeButton.Location = New-Object System.Drawing.Point(350,540)
-        $closeButton.Add_Click({ $resultForm.Close() })
-
-        $resultForm.Controls.AddRange(@($resultTextBox, $closeButton))
-        $resultForm.ShowDialog()
-        
-        RefreshContainers
-        RefreshImages
-    }
+    # 실시간 로그를 보여주기 위해 항상 새 콘솔 창에서 실행
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$composePath'; Write-Host 'Starting Docker Compose in: $composePath' -ForegroundColor Green; docker-compose -f '$composeFile' up"
+    
+    Start-Sleep -Seconds 2  # 컨테이너 시작 대기
+    RefreshContainers
+    RefreshImages
 })
 
 # Compose Down Button Click Handler
@@ -463,56 +410,38 @@ $composeDownButton.Add_Click({
     
     try {
         Set-Location $composePath
-        # 자세한 로그 수집
-        $output = "Starting Docker Compose Down...`n`n"
-        $output += "Using compose file: $composeFile`n"
-        $output += "Working directory: $composePath`n`n"
         
-        # 실행 중인 컨테이너 상태 확인
-        $output += "Current containers status:`n"
-        $output += docker-compose -f $composeFile ps 2>&1 | Out-String
-        $output += "`nStopping and removing containers...`n"
+        # docker-compose 관련 PowerShell 창 찾아서 종료
+        $powershellProcesses = Get-Process powershell | Where-Object { 
+            $_.MainWindowTitle -like "*docker-compose*" -or
+            $_.MainWindowTitle -like "*$composeFile*"
+        }
         
-        # 컨테이너 중지 및 제거
-        $output += docker-compose -f $composeFile down 2>&1 | Out-String
+        if ($powershellProcesses) {
+            foreach ($process in $powershellProcesses) {
+                Stop-Process -Id $process.Id -Force
+            }
+        }
+
+        # docker-compose down 실행
+        $output = docker-compose -f $composeFile down 2>&1 | Out-String
         
-        # 실행 후 상태 확인
-        $output += "`nFinal status:`n"
-        $output += docker-compose -f $composeFile ps 2>&1 | Out-String
+        [System.Windows.Forms.MessageBox]::Show(
+            "Docker Compose services have been stopped successfully.",
+            "Operation Complete"
+        )
     }
     catch {
-        $output += "`nError occurred: $_"
+        [System.Windows.Forms.MessageBox]::Show(
+            "Error occurred: $_",
+            "Error"
+        )
     }
     finally {
         $loadingPanel.Visible = $false
+        RefreshContainers
+        RefreshImages
     }
-    
-    # 결과 표시 (스크롤 가능한 텍스트박스로)
-    $resultForm = New-Object System.Windows.Forms.Form
-    $resultForm.Text = "Docker Compose Down Result"
-    $resultForm.Size = New-Object System.Drawing.Size(800,600)
-    $resultForm.StartPosition = 'CenterScreen'
-
-    $resultTextBox = New-Object System.Windows.Forms.TextBox
-    $resultTextBox.Multiline = $true
-    $resultTextBox.ScrollBars = 'Both'
-    $resultTextBox.WordWrap = $false
-    $resultTextBox.Font = New-Object System.Drawing.Font("Consolas", 10)
-    $resultTextBox.Size = New-Object System.Drawing.Size(780,520)
-    $resultTextBox.Location = New-Object System.Drawing.Point(10,10)
-    $resultTextBox.Text = $output
-
-    $closeButton = New-Object System.Windows.Forms.Button
-    $closeButton.Text = "Close"
-    $closeButton.Size = New-Object System.Drawing.Size(100,30)
-    $closeButton.Location = New-Object System.Drawing.Point(350,540)
-    $closeButton.Add_Click({ $resultForm.Close() })
-
-    $resultForm.Controls.AddRange(@($resultTextBox, $closeButton))
-    $resultForm.ShowDialog()
-    
-    RefreshContainers
-    RefreshImages
 })
 
 # Add controls to GroupBox
