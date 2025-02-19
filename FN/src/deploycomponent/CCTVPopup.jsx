@@ -198,9 +198,7 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
                 src={`/api2/get_frame2?instl_pos=${instlPos}&date_folder=${date}&hour_folder=${hour}&minute=00&frame_time=2.5`}
                 alt="Frame Image"
                 style={{
-                  width: "100%",
-                  height: "auto",
-                  objectFit: "contain",
+                  width: "100%", height: "70%", objectFit: "cover",border:"0"
                 }} />
              </>)
              :
@@ -228,9 +226,7 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
                     src={`/api3/get_frame3?instl_pos=${instlPos}&date_folder=${date}&hour_folder=${hour}&minute=30&frame_time=2.5`}
                     alt="Frame Image"
                     style={{
-                      width: "100%",
-                      height: "auto",
-                      objectFit: "contain",
+                        width: "100%", height: "70%", objectFit: "cover",border:"0"
                     }} />
               
               </>)
@@ -261,9 +257,7 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
                     src={`/api4/get_frame4?instl_pos=${instlPos}&date_folder=${date}&hour_folder=${hour}&minute=60&frame_time=2.5`}
                     alt="Frame Image"
                     style={{
-                      width: "100%",
-                      height: "auto",
-                      objectFit: "contain",
+                      width: "100%", height: "70%", objectFit: "cover",border:"0"
                     }} />
                 
                 </>)
