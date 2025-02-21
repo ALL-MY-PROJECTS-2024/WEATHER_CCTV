@@ -17,17 +17,17 @@ RUN apt-get update && apt-get install -y \
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# Create video directory
+RUN mkdir -p /app/video
+
 # Copy requirements.txt for dependencies
 COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire application code into the container
+# Copy the rest of the application code
 COPY . .
-
-# Rename video_origin to video
-RUN mv video_origin video
 
 # Convert start.sh to Unix format and make it executable
 RUN dos2unix start.sh && chmod +x start.sh
