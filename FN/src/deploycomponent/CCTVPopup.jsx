@@ -9,6 +9,9 @@ import flooding from "../dataSet/FLOODING.json";
 
 const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
   const [streamSrc, setStreamSrc] = useState("");
+  const [streamError, setStreamError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
   const [yolo,setYolo] = useState(false)
   const [streamId, setStreamId] = useState(""); // Added to manage streamId
   
@@ -31,37 +34,52 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
   const [date,setDate] = useState(null)
   const [hour,setHour] = useState(null)
   
-  useEffect(() => {
-    // Fetch the stream ID when the component mounts
-    const fetchStreamId = async () => {
+  const initializeStream = async () => {
+    try {
       let yoloFlag = false;
       for (const item of floodingData) {
         if (item.rtspAddr === rtspAddr) {
           yoloFlag = true;
-          break; // No need to continue once a match is found
+          break;
         }
       }
-      // setYolo(yoloFlag);
       setYolo(false);
-      yoloFlag=false;
+      yoloFlag = false;
 
-      try {
-        const response = await axios.get(`${server}/stream-id`, {
-          params: { rtspAddr: rtspAddr },
-        });
-        const { streamId } = response.data;
-        setStreamId(streamId);
-        setStreamSrc(
-          `${server}/stream/${streamId}?rtspAddr=${rtspAddr}&yolo=${yoloFlag}`
-          // 
-        );
-      } catch (error) {
-        console.error("Failed to fetch stream ID:", error);
-      }
-    };
+      const response = await axios.get(`${server}/stream-id`, {
+        params: { rtspAddr: rtspAddr },
+      });
+      const { streamId } = response.data;
+      setStreamId(streamId);
+      setStreamSrc(`${server}/stream/${streamId}?rtspAddr=${rtspAddr}&yolo=${yoloFlag}&t=${Date.now()}`);
+      setStreamError(false);
+    } catch (error) {
+      console.error("Failed to initialize stream:", error);
+      setStreamError(true);
+    }
+  };
 
-    fetchStreamId();
-  }, []);
+  useEffect(() => {
+    initializeStream();
+  }, [rtspAddr]);
+
+  // 스트림 에러 처리 및 재시도
+  useEffect(() => {
+    if (streamError && retryCount < maxRetries) {
+      const retryTimer = setTimeout(() => {
+        console.log(`Retrying stream connection... Attempt ${retryCount + 1}`);
+        setRetryCount(prev => prev + 1);
+        initializeStream();
+      }, 2000); // 2초 후 재시도
+
+      return () => clearTimeout(retryTimer);
+    }
+  }, [streamError, retryCount]);
+
+  // 스트림 이미지 에러 핸들러
+  const handleStreamError = () => {
+    setStreamError(true);
+  };
 
   //
   useEffect(() => {
@@ -144,15 +162,20 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
 
 
   const closeHandler = async () => {
-    // Stop the stream using the stream ID
     try {
+      // streamId가 있는 경우에만 스트림 중지 요청
       if (streamId) {
-        await axios.post(`${server}/stop-stream`, { streamId });
-        console.log("Stream stopped successfully");
+        try {
+          await axios.post(`${server}/stop-stream`, { streamId });
+          console.log("Stream stopped successfully");
+        } catch (stopError) {
+          console.error("Failed to stop stream:", stopError);
+          // 스트림 중지 실패해도 계속 진행
+        }
       }
-      onClose(); // Close the popup
-    } catch (error) {
-      console.error("Failed to stop stream:", error);
+    } finally {
+      // 항상 팝업은 닫히도록 함
+      onClose();
     }
   };
 
@@ -180,6 +203,9 @@ const CCTVPopup = ({ lat, lon, hlsAddr, onClose, rtspAddr, instlPos }) => {
                     width: "100%",
                     height: "100%",
                     objectFit: "contain",
+                  }}
+                  onError={(e) => {
+                    e.target.src = `${streamSrc}&retry=${Date.now()}`;
                   }}
                 />
               )}
