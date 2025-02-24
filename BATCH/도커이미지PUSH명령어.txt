@@ -1,0 +1,7 @@
+# Docker 이미지 목록을 가져옵니다.
+docker images
+
+
+docker tag weather_cctv-predict:latest junwoogyun/flas-opencv-app2:latest
+docker push junwoogyun/flas-opencv-app2:latest
+

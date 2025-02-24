@@ -7,8 +7,8 @@ set -e
 echo "=== Starting Application ==="
 
 # ondayback.py 실행
-echo "Starting ondayback.py..."
-python3 ondayback.py
+# echo "Starting ondayback.py..."
+# python3 ondayback.py
 
 # gen_video.py와 server.py를 백그라운드로 실행
 echo "Starting gen_video.py..."

@@ -53,8 +53,8 @@ services:
       - "5002:5002"
       - "5003:5003"
       - "5004:5004"
-    volumes:
-      - C:/video:/app/video
+    # volumes:
+    #   - C:/video:/app/video
 
   auth:
     build: ./BN_AUTH
