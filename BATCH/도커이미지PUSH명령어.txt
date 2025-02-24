@@ -2,6 +2,6 @@
 docker images
 
 
-docker tag weather_cctv-predict:latest junwoogyun/flas-opencv-app2:latest
-docker push junwoogyun/flas-opencv-app2:latest
+docker tag weather_cctv-predict:latest junwoogyun/flask-opencv-app2:latest
+docker push junwoogyun/flask-opencv-app2:latest
 
